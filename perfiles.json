@@ -1,0 +1,31 @@
+[
+  {
+    "id": "QV-01",
+    "alias": "Valeria Reign",
+    "pais": "Venezuela",
+    "estado": "Disponible ahora",
+    "foto": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+    "bio": "Contenido exclusivo diario, sets privados y atención personalizada.",
+    "categorias": ["Sets Privados", "Videos VIP", "Personalizado"],
+    "paquetes": [
+      { "nombre": "Pack Acceso (15 Fotos + 3 Videos)", "precio": "10$" },
+      { "nombre": "Bóveda VIP Mensual", "precio": "25$" },
+      { "nombre": "Experiencia Personalizada", "precio": "40$" }
+    ],
+    "activa": true
+  },
+  {
+    "id": "QV-02",
+    "alias": "Elena Noir",
+    "pais": "Colombia",
+    "estado": "VIP Exclusiva",
+    "foto": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+    "bio": "Estética nocturna, material sin censura y sesiones privadas bajo reserva.",
+    "categorias": ["Videos VIP", "Videollamada", "Sin Censura"],
+    "paquetes": [
+      { "nombre": "Pack Nocturno (10 Fotos + 4 Videos)", "precio": "15$" },
+      { "nombre": "Pase Total 30 Días", "precio": "30$" }
+    ],
+    "activa": true
+  }
+]

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QUEEN VAULT | Private VIP Directory</title>
+  <meta name="description" content="Directorio privado y exclusivo de creadoras seleccionadas. Acceso VIP +18." />
+  <style>
+    :root {
+      --bg: #070709;
+      --card: #111116;
+      --border: #24242e;
+      --gold: #d4af37;
+      --crimson: #e11d48;
+      --text: #f4f4f6;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+    }
+    #age-gate {
+      position: fixed; inset: 0; background: rgba(5, 5, 7, 0.97);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; padding: 20px;
+    }
+    .gate-box {
+      background: var(--card); border: 1px solid var(--gold);
+      border-radius: 16px; max-width: 400px; width: 100%;
+      padding: 28px 22px; text-align: center;
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+    }
+    .gate-badge {
+      display: inline-block; background: rgba(225, 29, 72, 0.15);
+      color: var(--crimson); border: 1px solid var(--crimson);
+      padding: 4px 12px; border-radius: 999px; font-size: 12px;
+      font-weight: 700; letter-spacing: 1px; margin-bottom: 14px;
+    }
+    .gate-box h2 { font-size: 24px; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; }
+    .gate-box p { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+    .gate-actions { display: flex; gap: 10px; }
+    .btn {
+      border: none; border-radius: 10px; padding: 12px 16px;
+      font-weight: 700; cursor: pointer; font-size: 14px; width: 100%;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-gold { background: linear-gradient(135deg, #d4af37, #b5891c); color: #09090b; }
+    .btn-dark { background: #1c1c24; color: var(--muted); border: 1px solid var(--border); }
+    .btn-crimson { background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; }
+    header {
+      padding: 24px 16px 18px; text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(circle at top, rgba(212, 175, 55, 0.12), transparent 70%);
+    }
+    .brand {
+      font-size: 26px; font-weight: 800; letter-spacing: 3px;
+      color: var(--gold); text-transform: uppercase;
+    }
+    .tagline { font-size: 13px; color: var(--muted); margin-top: 4px; letter-spacing: 0.5px; }
+    .container { max-width: 960px; margin: 0 auto; padding: 20px 16px 60px; }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .card-img-wrap { position: relative; height: 320px; background: #18181f; }
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .status-pill {
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(7, 7, 9, 0.85); border: 1px solid var(--gold);
+      color: var(--gold); font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+    }
+    .id-pill {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(7, 7, 9, 0.85); color: var(--muted);
+      font-size: 11px; padding: 4px 8px; border-radius: 6px;
+    }
+    .card-body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+    .card-title { font-size: 20px; font-weight: 700; color: #fff; }
+    .card-sub { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
+    .card-bio { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tag {
+      font-size: 11px; background: #191922; border: 1px solid var(--border);
+      color: #d1d5db; padding: 3px 8px; border-radius: 6px;
+    }
+    .packages { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+    .pkg-btn {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #17171f; border: 1px solid #2b2b36; color: #fff;
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      font-size: 13px; text-align: left; transition: border-color 0.15s;
+    }
+    .pkg-btn:hover { border-color: var(--gold); }
+    .pkg-price {
+      background: var(--gold); color: #09090b; font-weight: 800;
+      padding: 3px 8px; border-radius: 6px; font-size: 12px; margin-left: 8px;
+      white-space: nowrap;
+    }
+    .creator-cta {
+      margin-top: 40px; padding: 24px 18px; border-radius: 16px;
+      background: linear-gradient(145deg, #13131a, #0c0c10);
+      border: 1px solid var(--border); text-align: center;
+    }
+    .creator-cta h3 { color: var(--gold); font-size: 18px; margin-bottom: 6px; }
+    .creator-cta p { color: var(--muted); font-size: 13px; margin-bottom: 16px; max-width: 480px; margin-inline: auto; }
+    footer {
+      text-align: center; padding: 20px 16px; font-size: 12px;
+      color: #6b7280; border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="age-gate">
+    <div class="gate-box">
+      <div class="gate-badge">+18 SOLO ADULTOS</div>
+      <h2>QUEEN VAULT</h2>
+      <p>Este catálogo privado contiene material exclusivo para mayores de 18 años. Al entrar confirmas tu mayoría de edad y aceptas nuestros términos de discreción.</p>
+      <div class="gate-actions">
+        <button class="btn btn-dark" onclick="window.location.href='https://google.com'">Salir</button>
+        <button class="btn btn-gold" onclick="enterVault()">Entrar (+18)</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">QUEEN VAULT</div>
+    <div class="tagline">Private VIP Creators Directory • Acceso Discreto</div>
+  </header>
+
+  <main class="container">
+    <div id="catalog" class="grid"></div>
+
+    <section class="creator-cta">
+      <h3>¿Eres creadora y quieres monetizar más?</h3>
+      <p>Únete a Queen Vault. Nosotros filtramos clientes reales y llevamos tráfico directo a tus paquetes sin exponerte al spam.</p>
+      <button class="btn btn-crimson" style="max-width: 280px;" onclick="applyCreator()">Postularme como Reina VIP</button>
+    </section>
+  </main>
+
+  <footer>
+    QUEEN VAULT &copy; 2026 • Todos los perfiles son mayores de edad (+18) verificados.
+  </footer>
+
+  <script>
+    const ADMIN_WHATSAPP = "584166978426";
+
+    if (localStorage.getItem("qv_age_ok") === "1") {
+      document.getElementById("age-gate").style.display = "none";
+    }
+
+    function enterVault() {
+      localStorage.setItem("qv_age_ok", "1");
+      document.getElementById("age-gate").style.display = "none";
+    }
+
+    function requestPackage(id, alias, pkgName, price) {
+      const msg = `Hola Queen Vault, quiero solicitar acceso:\n• Perfil: ${alias} (${id})\n• Paquete: ${pkgName} (${price})\n¿Me indicas los pasos para activar?`;
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    function applyCreator() {
+      const msg = `Hola Queen Vault, soy creadora (+18) y quiero información para unir mi perfil al catálogo VIP.`;
+      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    async function loadProfiles() {
+      try {
+        const res = await fetch("perfiles.json?v=" + Date.now());
+        const data = await res.json();
+        const container = document.getElementById("catalog");
+        container.innerHTML = "";
+
+        data.filter(p => p.activa).forEach(p => {
+          const tagsHtml = p.categorias.map(c => `<span class="tag">${c}</span>`).join("");
+          const pkgsHtml = p.paquetes.map(pkg => `
+            <button class="pkg-btn" onclick="requestPackage('${p.id}', '${p.alias}', '${pkg.nombre}', '${pkg.precio}')">
+              <span>${pkg.nombre}</span>
+              <span class="pkg-price">${pkg.precio}</span>
+            </button>
+          `).join("");
+
+          container.innerHTML += `
+            <article class="card">
+              <div class="card-img-wrap">
+                <span class="status-pill">${p.estado}</span>
+                <span class="id-pill">${p.id}</span>
+                <img src="${p.foto}" alt="${p.alias}" loading="lazy" />
+              </div>
+              <div class="card-body">
+                <div class="card-title">${p.alias}</div>
+                <div class="card-sub">${p.pais}</div>
+                <p class="card-bio">${p.bio}</p>
+                <div class="tags">${tagsHtml}</div>
+                <div class="packages">${pkgsHtml}</div>
+              </div>
+            </article>
+          `;
+        });
+      } catch (e) {
+        document.getElementById("catalog").innerHTML = "<p style='color:#9ca3af'>Cargando bóveda...</p>";
+      }
+    }
+
+    loadProfiles();
+  </script>
+</body>
+</html>
