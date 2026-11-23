@@ -1,354 +1,270 @@
-<!DOCTYPE html>
+
+[200~<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QUEEN VAULT | Acceso VIP +18</title>
-  <meta name="description" content="Lo que no se ve en público. Perfiles exclusivos +18, sets privados y atención directa." />
-
-  <!-- Open Graph para detener el scroll al compartir el enlace -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="QUEEN VAULT • Bóveda Privada VIP (+18)" />
-  <meta property="og:description" content="Acceso directo a creadoras seleccionadas, paquetes privados y atención discreta." />
-  <meta property="og:url" content="https://meygey.github.io/queen-vault/" />
-  <meta property="og:image" content="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80" />
-
+  <title>Queen Vault | Catálogo & Postulación</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #070709;
-      --card: #111116;
-      --border: #24242e;
-      --gold: #d4af37;
-      --crimson: #e11d48;
-      --text: #f4f4f6;
-      --muted: #9ca3af;
+      --bg: #09090b;
+      --card: #141418;
+      --border: #27272f;
+      --accent: #e11d48;
+      --accent-hover: #be123c;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --ok: #10b981;
+      --err: #ef4444;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.5;
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    header {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 24px;
     }
-
-    /* Gate +18 */
-    #age-gate {
-      position: fixed; inset: 0; background: rgba(5, 5, 7, 0.97);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 9999; padding: 20px;
-    }
-    .gate-box {
-      background: var(--card); border: 1px solid var(--gold);
-      border-radius: 16px; max-width: 400px; width: 100%;
-      padding: 28px 22px; text-align: center;
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
-    }
-    .gate-badge {
-      display: inline-block; background: rgba(225, 29, 72, 0.15);
-      color: var(--crimson); border: 1px solid var(--crimson);
-      padding: 4px 12px; border-radius: 999px; font-size: 12px;
-      font-weight: 700; letter-spacing: 1px; margin-bottom: 14px;
-    }
-    .gate-box h2 { font-size: 24px; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; }
-    .gate-box p { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
-    .gate-actions { display: flex; gap: 10px; }
-
+    .brand { font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px; }
+    .brand span { color: var(--accent); }
     .btn {
-      border: none; border-radius: 10px; padding: 12px 16px;
-      font-weight: 700; cursor: pointer; font-size: 14px; width: 100%;
-      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      background: var(--accent); color: #fff; border: none; border-radius: 10px;
+      padding: 11px 18px; font-weight: 700; cursor: pointer; font-size: 0.95rem;
     }
-    .btn:active { transform: scale(0.98); }
-    .btn-gold { background: linear-gradient(135deg, #e5c158, #b5891c); color: #09090b; }
-    .btn-dark { background: #1c1c24; color: var(--muted); border: 1px solid var(--border); }
-    .btn-crimson { background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; }
-    .btn-outline-gold {
-      background: rgba(212, 175, 55, 0.08);
-      color: var(--gold);
-      border: 1px solid rgba(212, 175, 55, 0.45);
-    }
-
-    /* Portada Hero de Alto Impacto */
-    .hero {
-      position: relative;
-      min-height: 430px;
-      display: flex;
-      align-items: flex-end;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border);
-      background: #09090c;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(180deg, rgba(7,7,9,0.28) 0%, rgba(7,7,9,0.78) 58%, #070709 100%),
-        radial-gradient(circle at 80% 20%, rgba(225, 29, 72, 0.25), transparent 50%),
-        url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80") center/cover no-repeat;
-      transform: scale(1.03);
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 960px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 36px 16px 28px;
-    }
-    .hero-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(225, 29, 72, 0.18);
-      border: 1px solid rgba(225, 29, 72, 0.6);
-      color: #fda4af;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-    .hero-title {
-      font-size: 32px;
-      line-height: 1.1;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: #fff;
-      margin-bottom: 10px;
-      max-width: 680px;
-    }
-    .hero-title span { color: var(--gold); }
-    .hero-sub {
-      color: #d1d5db;
-      font-size: 14px;
-      max-width: 560px;
-      margin-bottom: 18px;
-    }
-    .hero-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-      max-width: 520px;
-    }
-    .hero-cta-row .btn { flex: 1 1 200px; }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      max-width: 560px;
-    }
-    .stat-box {
-      background: rgba(17, 17, 22, 0.85);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      backdrop-filter: blur(6px);
-    }
-    .stat-num { font-size: 16px; font-weight: 800; color: var(--gold); }
-    .stat-lbl { font-size: 11px; color: var(--muted); }
-
-    /* Grid */
-    .container { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 16px;
-      gap: 10px;
-    }
-    .section-head h2 { font-size: 20px; color: var(--gold); letter-spacing: 1px; }
-    .section-head span { font-size: 12px; color: var(--muted); }
-
+    .btn:hover { background: var(--accent-hover); }
     .grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 18px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px; margin-bottom: 36px;
     }
     .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column;
     }
-    .card-img-wrap { position: relative; height: 320px; background: #18181f; }
-    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .status-pill {
-      position: absolute; top: 12px; left: 12px;
-      background: rgba(7, 7, 9, 0.85); border: 1px solid var(--gold);
-      color: var(--gold); font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 999px;
+    .card img { width: 100%; height: 240px; object-fit: cover; background: #1c1c22; }
+    .card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .badge {
+      display: inline-block; width: fit-content; font-size: 0.75rem; font-weight: 700;
+      padding: 3px 8px; border-radius: 999px; background: rgba(225, 29, 72, 0.18); color: #fda4af;
     }
-    .id-pill {
-      position: absolute; top: 12px; right: 12px;
-      background: rgba(7, 7, 9, 0.85); color: var(--muted);
-      font-size: 11px; padding: 4px 8px; border-radius: 6px;
+    .panel {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px; max-width: 560px; margin: 0 auto;
     }
-    .card-body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
-    .card-title { font-size: 20px; font-weight: 700; color: #fff; }
-    .card-sub { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
-    .card-bio { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-    .tag {
-      font-size: 11px; background: #191922; border: 1px solid var(--border);
-      color: #d1d5db; padding: 3px 8px; border-radius: 6px;
+    .panel h2 { font-size: 1.25rem; margin-bottom: 6px; }
+    .panel p.sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 18px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+    .field input[type="text"],
+    .field input[type="tel"],
+    .field input[type="file"] {
+      width: 100%; background: #0d0d10; border: 1px solid var(--border); color: var(--text);
+      border-radius: 10px; padding: 10px 12px; font-size: 0.95rem;
     }
-    .packages { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
-    .pkg-btn {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #17171f; border: 1px solid #2b2b36; color: #fff;
-      padding: 10px 12px; border-radius: 10px; cursor: pointer;
-      font-size: 13px; text-align: left; transition: border-color 0.15s;
+    .checks { display: flex; flex-wrap: wrap; gap: 10px; }
+    .checks label {
+      display: flex; align-items: center; gap: 6px; font-weight: 500;
+      background: #0d0d10; border: 1px solid var(--border); padding: 8px 12px; border-radius: 10px; cursor: pointer;
     }
-    .pkg-btn:hover { border-color: var(--gold); }
-    .pkg-price {
-      background: var(--gold); color: #09090b; font-weight: 800;
-      padding: 3px 8px; border-radius: 6px; font-size: 12px; margin-left: 8px;
-      white-space: nowrap;
-    }
-
-    .creator-cta {
-      margin-top: 40px; padding: 24px 18px; border-radius: 16px;
-      background: linear-gradient(145deg, #13131a, #0c0c10);
-      border: 1px solid var(--border); text-align: center;
-    }
-    .creator-cta h3 { color: var(--gold); font-size: 18px; margin-bottom: 6px; }
-    .creator-cta p { color: var(--muted); font-size: 13px; margin-bottom: 16px; max-width: 480px; margin-inline: auto; }
-    footer {
-      text-align: center; padding: 20px 16px; font-size: 12px;
-      color: #6b7280; border-top: 1px solid var(--border);
-    }
-
-    @media (min-width: 700px) {
-      .hero { min-height: 470px; }
-      .hero-title { font-size: 42px; }
+    .preview-box { margin-top: 10px; display: none; }
+    .preview-box img { max-height: 180px; border-radius: 10px; border: 1px solid var(--border); }
+    .msg { margin-top: 14px; font-size: 0.9rem; line-height: 1.45; }
+    .msg.ok { color: var(--ok); }
+    .msg.err { color: var(--err); }
+    .wa-link {
+      display: inline-block; margin-top: 10px; background: #16a34a; color: #fff;
+      text-decoration: none; font-weight: 700; padding: 10px 14px; border-radius: 10px;
     }
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div class="brand">QUEEN <span>VAULT</span></div>
+      <a href="#postularme" class="btn" style="text-decoration:none;">Postularme (+18)</a>
+    </header>
 
-  <div id="age-gate">
-    <div class="gate-box">
-      <div class="gate-badge">+18 SOLO ADULTOS</div>
-      <h2>QUEEN VAULT</h2>
-      <p>Este catálogo privado contiene material exclusivo para mayores de 18 años. Al entrar confirmas tu mayoría de edad y aceptas nuestros términos de discreción.</p>
-      <div class="gate-actions">
-        <button class="btn btn-dark" onclick="window.location.href='https://google.com'">Salir</button>
-        <button class="btn btn-gold" onclick="enterVault()">Entrar (+18)</button>
-      </div>
-    </div>
+    <section>
+      <h2 style="margin-bottom:14px; font-size:1.15rem;">Catálogo Activo</h2>
+      <div id="catalogo" class="grid"></div>
+    </section>
+
+    <section id="postularme" class="panel">
+      <h2>Postulación de Participantes</h2>
+      <p class="sub">Completa tus datos y sube tu foto de portada para iniciar tu revisión.</p>
+
+      <form id="formPostulacion">
+        <div class="field">
+          <label for="alias">Alias artístico *</label>
+          <input id="alias" type="text" required placeholder="Ej. Valentina VIP" />
+        </div>
+
+        <div class="field">
+          <label for="pais">País *</label>
+          <input id="pais" type="text" required placeholder="Ej. Venezuela" />
+        </div>
+
+        <div class="field">
+          <label for="whatsapp">WhatsApp de contacto (con código de país) *</label>
+          <input id="whatsapp" type="tel" required placeholder="Ej. 584121234567" />
+        </div>
+
+        <div class="field">
+          <label>Modalidades</label>
+          <div class="checks">
+            <label><input type="checkbox" name="mod" value="Sets Privados" /> Sets Privados</label>
+            <label><input type="checkbox" name="mod" value="Videos VIP" /> Videos VIP</label>
+            <label><input type="checkbox" name="mod" value="Videollamada" /> Videollamada</label>
+            <label><input type="checkbox" name="mod" value="Contenido Personalizado" /> Personalizado</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="foto">Foto de portada *</label>
+          <input id="foto" type="file" accept="image/*" required />
+          <div id="previewBox" class="preview-box">
+            <img id="previewImg" alt="Vista previa" />
+          </div>
+        </div>
+
+        <button id="btnEnviar" type="submit" class="btn" style="width:100%;">Enviar Postulación</button>
+        <div id="estadoEnvio" class="msg"></div>
+      </form>
+    </section>
   </div>
 
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-      <div class="hero-kicker">QUEEN VAULT • ACCESO PRIVADO +18</div>
-      <h1 class="hero-title">LO QUE NO SE VE EN PÚBLICO. <span>ENTRA A LA BÓVEDA.</span></h1>
-      <p class="hero-sub">Creadoras seleccionadas, paquetes exclusivos listos para activar y atención directa sin rodeos.</p>
-
-      <div class="hero-cta-row">
-        <a href="#catalogo-vip" class="btn btn-gold">Ver Reinas Disponibles</a>
-        <button class="btn btn-outline-gold" onclick="applyCreator()">Soy Creadora (+18)</button>
-      </div>
-
-      <div class="hero-stats">
-        <div class="stat-box">
-          <div class="stat-num">VIP +18</div>
-          <div class="stat-lbl">Acceso directo</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">100%</div>
-          <div class="stat-lbl">Trato discreto</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">24/7</div>
-          <div class="stat-lbl">Gestión de paquetes</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <main class="container" id="catalogo-vip">
-    <div class="section-head">
-      <h2>PERFILES ACTIVOS</h2>
-      <span>Toca un paquete para solicitar</span>
-    </div>
-
-    <div id="catalog" class="grid"></div>
-
-    <section class="creator-cta">
-      <h3>¿Eres creadora y quieres monetizar más?</h3>
-      <p>Únete a Queen Vault. Nosotros filtramos clientes reales y llevamos tráfico directo a tus paquetes sin exponerte al spam.</p>
-      <button class="btn btn-crimson" style="max-width: 280px;" onclick="applyCreator()">Postularme como Reina VIP</button>
-    </section>
-  </main>
-
-  <footer>
-    QUEEN VAULT &copy; 2026 • Todos los perfiles son mayores de edad (+18) verificados.
-  </footer>
-
   <script>
+    const SUPABASE_URL = "https://dfgbmwgmghbfkitutxai.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_-CDM2ydv83JLltbTK_mXtw_Qfqhp_9R";
+    const BUCKET_FOTOS = "portadas-participantes";
     const ADMIN_WHATSAPP = "584166978426";
 
-    if (localStorage.getItem("qv_age_ok") === "1") {
-      document.getElementById("age-gate").style.display = "none";
-    }
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-    function enterVault() {
-      localStorage.setItem("qv_age_ok", "1");
-      document.getElementById("age-gate").style.display = "none";
-    }
+    const catalogoEl = document.getElementById("catalogo");
+    const formEl = document.getElementById("formPostulacion");
+    const fotoInput = document.getElementById("foto");
+    const previewBox = document.getElementById("previewBox");
+    const previewImg = document.getElementById("previewImg");
+    const estadoEl = document.getElementById("estadoEnvio");
+    const btnEnviar = document.getElementById("btnEnviar");
 
-    function requestPackage(id, alias, pkgName, price) {
-      const msg = `Hola Queen Vault, quiero solicitar acceso:\n• Perfil: ${alias} (${id})\n• Paquete: ${pkgName} (${price})\n¿Me indicas los pasos para activar?`;
-      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
-    }
-
-    function applyCreator() {
-      const msg = `Hola Queen Vault, soy creadora (+18) y quiero información para unir mi perfil al catálogo VIP.`;
-      window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
-    }
-
-    async function loadProfiles() {
-      try {
-        const res = await fetch("perfiles.json?v=" + Date.now());
-        const data = await res.json();
-        const container = document.getElementById("catalog");
-        container.innerHTML = "";
-
-        data.filter(p => p.activa).forEach(p => {
-          const tagsHtml = p.categorias.map(c => `<span class="tag">${c}</span>`).join("");
-          const pkgsHtml = p.paquetes.map(pkg => `
-            <button class="pkg-btn" onclick="requestPackage('${p.id}', '${p.alias}', '${pkg.nombre}', '${pkg.precio}')">
-              <span>${pkg.nombre}</span>
-              <span class="pkg-price">${pkg.precio}</span>
-            </button>
-          `).join("");
-
-          container.innerHTML += `
-            <article class="card">
-              <div class="card-img-wrap">
-                <span class="status-pill">${p.estado}</span>
-                <span class="id-pill">${p.id}</span>
-                <img src="${p.foto}" alt="${p.alias}" loading="lazy" />
-              </div>
-              <div class="card-body">
-                <div class="card-title">${p.alias}</div>
-                <div class="card-sub">${p.pais}</div>
-                <p class="card-bio">${p.bio}</p>
-                <div class="tags">${tagsHtml}</div>
-                <div class="packages">${pkgsHtml}</div>
-              </div>
-            </article>
-          `;
-        });
-      } catch (e) {
-        document.getElementById("catalog").innerHTML = "<p style='color:#9ca3af'>Cargando bóveda...</p>";
+    fotoInput.addEventListener("change", () => {
+      const file = fotoInput.files[0];
+      if (!file) {
+        previewBox.style.display = "none";
+        return;
       }
+      previewImg.src = URL.createObjectURL(file);
+      previewBox.style.display = "block";
+    });
+
+    async function cargarCatalogo() {
+      const { data, error } = await sb
+        .from("creadoras")
+        .select("*")
+        .eq("activa", true);
+
+      if (error || !data || data.length === 0) {
+        catalogoEl.innerHTML = `
+          <div class="card">
+            <div class="card-body">
+              <span class="badge">QUEEN VAULT</span>
+              <strong>Catálogo en preparación</strong>
+              <span style="color:#a1a1aa; font-size:0.85rem;">Las primeras creadoras aprobadas aparecerán aquí.</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      catalogoEl.innerHTML = data.map((c) => `
+        <div class="card">
+          <img src="${c.foto_url || ""}" alt="${c.alias || "Creadora"}" />
+          <div class="card-body">
+            <span class="badge">${c.estado_perfil || "Activa"}</span>
+            <strong>${c.alias || "Perfil"}</strong>
+            <span style="color:#a1a1aa; font-size:0.85rem;">${c.pais || ""}</span>
+          </div>
+        </div>
+      `).join("");
     }
 
-    loadProfiles();
+    function limpiarTelefono(num) {
+      return (num || "").replace(/\D/g, "");
+    }
+
+    formEl.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      estadoEl.className = "msg";
+      estadoEl.textContent = "Subiendo foto y registrando postulación...";
+      btnEnviar.disabled = true;
+
+      try {
+        const alias = document.getElementById("alias").value.trim();
+        const pais = document.getElementById("pais").value.trim();
+        const whatsappRaw = document.getElementById("whatsapp").value.trim();
+        const whatsappLimpio = limpiarTelefono(whatsappRaw);
+        const modalidades = Array.from(document.querySelectorAll('input[name="mod"]:checked')).map((el) => el.value);
+        const archivo = fotoInput.files[0];
+
+        if (!archivo) throw new Error("Debes seleccionar una foto de portada.");
+        if (!whatsappLimpio) throw new Error("Ingresa un número de WhatsApp válido.");
+
+        const ext = (archivo.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const nombreArchivo = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext || "jpg"}`;
+
+        const { error: uploadError } = await sb.storage
+          .from(BUCKET_FOTOS)
+          .upload(nombreArchivo, archivo, { cacheControl: "3600", upsert: false });
+
+        if (uploadError) throw new Error("Error al subir la foto: " + uploadError.message);
+
+        const { data: pubData } = sb.storage.from(BUCKET_FOTOS).getPublicUrl(nombreArchivo);
+        const fotoUrl = pubData.publicUrl;
+
+        const { error: insertError } = await sb
+          .from("participantes")
+          .insert([{
+            alias_artistico: alias,
+            pais: pais,
+            whatsapp_contacto: whatsappLimpio,
+            modalidades: modalidades,
+            foto_url: fotoUrl,
+            estado_postulacion: "Pendiente",
+            publicada_en_catalogo: false
+          }]);
+
+        if (insertError) throw new Error("Error al guardar postulación: " + insertError.message);
+
+        const textoAdmin = encodeURIComponent(
+          `👑 NUEVA POSTULACIÓN - QUEEN VAULT\n` +
+          `• Alias: ${alias}\n` +
+          `• País: ${pais}\n` +
+          `• WhatsApp Creadora: https://wa.me/${whatsappLimpio}\n` +
+          `• Modalidades: ${modalidades.length ? modalidades.join(", ") : "No especificadas"}\n` +
+          `• Foto: ${fotoUrl}\n\n` +
+          `Acción: Revisar foto para APROBAR o enviar a NUEVO INGRESO.`
+        );
+        const linkAvisoAdmin = `https://wa.me/${ADMIN_WHATSAPP}?text=${textoAdmin}`;
+
+        estadoEl.className = "msg ok";
+        estadoEl.innerHTML = `
+          ¡Postulación enviada con éxito! Tu foto ya quedó cargada y tu perfil está en revisión.<br/>
+          <a class="wa-link" href="${linkAvisoAdmin}" target="_blank" rel="noopener">Notificar / Abrir WhatsApp</a>
+        `;
+        formEl.reset();
+        previewBox.style.display = "none";
+      } catch (err) {
+        estadoEl.className = "msg err";
+        estadoEl.textContent = err.message || "Ocurrió un error al enviar.";
+      } finally {
+        btnEnviar.disabled = false;
+      }
+    });
+
+    cargarCatalogo();
   </script>
 </body>
 </html>
+~[200~EOF
+~
