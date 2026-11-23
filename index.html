@@ -372,16 +372,28 @@
         const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(ruta);
         const fotoUrl = urlData.publicUrl;
 
-        const { error: insErr } = await sb.from("participantes").insert([{
-          alias_artistico: alias,
-          pais: pais,
-          whatsapp_contacto: waLimpio,
-          modalidades: mods,
-          foto_url: fotoUrl,
-          estado_postulacion: "Pendiente",
-          publicada_en_catalogo: false
-        }]);
-        if (insErr) throw new Error("Error guardando postulación: " + insErr.message);
+        const resDb = await fetch(`${SUPABASE_URL}/rest/v1/participantes`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": `Bearer ${SUPABASE_KEY}`,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify([{
+            alias_artistico: alias,
+            pais: pais,
+            whatsapp_contacto: waLimpio,
+            modalidades: mods,
+            foto_url: fotoUrl,
+            estado_postulacion: "Pendiente",
+            publicada_en_catalogo: false
+          }])
+        });
+        if (!resDb.ok) {
+          const errTxt = await resDb.text();
+          throw new Error("Error guardando postulación: " + (errTxt || resDb.status));
+        }
 
         const msg = encodeURIComponent(
           `👑 NUEVA POSTULACIÓN - QUEEN VAULT
