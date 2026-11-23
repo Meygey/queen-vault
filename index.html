@@ -8,55 +8,88 @@
   <style>
     :root {
       --bg: #070709;
-      --surface: #111115;
-      --surface-2: #18181f;
-      --border: #262630;
+      --surface: #121217;
+      --surface-2: #191920;
+      --border: #282833;
       --text: #f5f5f7;
-      --muted: #9e9ea8;
+      --muted: #a1a1aa;
+      --gold: #eab308;
       --accent: #e11d48;
-      --accent-hover: #be123c;
       --ok: #10b981;
       --err: #ef4444;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 18px; }
-    .container { max-width: 960px; margin: 0 auto; }
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 14px 18px; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; margin-bottom: 18px;
-    }
-    .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: 0.6px; }
-    .logo span { color: var(--accent); }
-    .btn-postular {
-      background: var(--accent); color: #fff; border: none; border-radius: 10px;
-      padding: 10px 16px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
-    }
-    .btn-postular:hover { background: var(--accent-hover); }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; }
+    .container { max-width: 680px; margin: 0 auto; }
     .hero {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      padding: 18px; margin-bottom: 22px;
+      background: linear-gradient(180deg, rgba(24,24,36,0.92), rgba(10,10,14,0.98));
+      border: 1px solid var(--border); border-radius: 18px; padding: 22px; margin-bottom: 24px;
     }
-    .hero h1 { font-size: 1.35rem; margin-bottom: 6px; }
-    .hero p { color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
-    .section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; color: var(--text); }
-    .grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 14px; margin-bottom: 24px;
+    .pill {
+      display: inline-block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.6px;
+      padding: 5px 10px; border-radius: 999px; background: rgba(225, 29, 72, 0.22);
+      color: #fda4af; margin-bottom: 12px;
     }
+    .hero h1 { font-size: 1.55rem; line-height: 1.18; font-weight: 900; margin-bottom: 10px; }
+    .hero h1 span { color: var(--gold); }
+    .hero p { color: var(--muted); font-size: 0.92rem; line-height: 1.45; margin-bottom: 16px; }
+    .actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .btn-gold {
+      width: 100%; background: var(--gold); color: #111; border: none; border-radius: 12px;
+      padding: 13px 16px; font-weight: 800; font-size: 0.95rem; cursor: pointer;
+    }
+    .btn-dark {
+      width: 100%; background: var(--surface-2); color: var(--gold); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 16px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+    }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat {
+      background: rgba(18, 18, 23, 0.9); border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px; text-align: left;
+    }
+    .stat strong { display: block; color: var(--gold); font-size: 0.95rem; }
+    .stat span { color: var(--muted); font-size: 0.75rem; }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px; gap: 10px;
+    }
+    .section-head h2 { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.4px; }
+    .section-head span { color: var(--muted); font-size: 0.82rem; }
     .card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      overflow: hidden; margin-bottom: 18px;
     }
-    .card img { width: 100%; height: 230px; object-fit: cover; display: block; background: var(--surface-2); }
-    .card-info { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
-    .tag {
-      display: inline-block; width: fit-content; font-size: 0.72rem; font-weight: 700;
-      padding: 2px 8px; border-radius: 999px; background: rgba(225, 29, 72, 0.16); color: #fda4af;
+    .media-box { position: relative; background: var(--surface-2); }
+    .media-box img { width: 100%; height: 340px; object-fit: cover; display: block; }
+    .badge-top-left {
+      position: absolute; top: 12px; left: 12px; background: rgba(20, 20, 24, 0.88);
+      color: var(--gold); font-size: 0.75rem; font-weight: 800; padding: 5px 10px; border-radius: 999px;
+    }
+    .badge-top-right {
+      position: absolute; top: 12px; right: 12px; background: rgba(10, 10, 14, 0.85);
+      color: var(--text); font-size: 0.75rem; font-weight: 700; padding: 5px 9px; border-radius: 8px;
+    }
+    .card-body { padding: 16px; }
+    .card-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 2px; }
+    .card-country { color: var(--gold); font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; }
+    .card-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.45; margin-bottom: 12px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+    .chip {
+      background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+      font-size: 0.78rem; font-weight: 600; padding: 5px 10px; border-radius: 8px;
+    }
+    .pack {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 11px;
+      padding: 11px 14px; margin-bottom: 8px; font-size: 0.9rem; font-weight: 600;
+    }
+    .price {
+      background: var(--gold); color: #111; font-weight: 800; font-size: 0.82rem;
+      padding: 3px 9px; border-radius: 7px;
     }
     .modal-box {
       display: none; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px; margin-top: 10px;
+      border-radius: 18px; padding: 20px; margin-top: 14px;
     }
     .modal-head {
       display: flex; justify-content: space-between; align-items: center;
@@ -82,11 +115,6 @@
     }
     .preview { display: none; margin-top: 10px; }
     .preview img { max-height: 170px; border-radius: 10px; border: 1px solid var(--border); }
-    .btn-submit {
-      width: 100%; background: var(--accent); color: #fff; border: none;
-      border-radius: 10px; padding: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
-    }
-    .btn-submit:hover { background: var(--accent-hover); }
     .status { margin-top: 12px; font-size: 0.9rem; line-height: 1.45; }
     .status.ok { color: var(--ok); }
     .status.err { color: var(--err); }
@@ -98,34 +126,44 @@
 </head>
 <body>
   <div class="container">
-    <div class="topbar">
-      <div class="logo">QUEEN <span>VAULT</span></div>
-      <button id="btnAbrirForm" type="button" class="btn-postular">Postulación (+18)</button>
-    </div>
-
     <div class="hero">
-      <h1>Queen Vault</h1>
-      <p>Espacio privado de catálogo y gestión para creadoras (+18). Explora los perfiles destacados o envía tu postulación con tu foto de portada para iniciar revisión.</p>
+      <div class="pill">QUEEN VAULT • ACCESO PRIVADO +18</div>
+      <h1>LO QUE NO SE VE EN PÚBLICO. <span>ENTRA A LA BÓVEDA.</span></h1>
+      <p>Creadoras seleccionadas, paquetes exclusivos listos para activar y atención directa sin rodeos.</p>
+      <div class="actions">
+        <button id="btnVerReinas" type="button" class="btn-gold">Ver Reinas Disponibles</button>
+        <button id="btnAbrirForm" type="button" class="btn-dark">Soy Creadora (+18)</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong>VIP +18</strong><span>Acceso directo</span></div>
+        <div class="stat"><strong>100%</strong><span>Trato discreto</span></div>
+        <div class="stat"><strong>24/7</strong><span>Gestión de paquetes</span></div>
+      </div>
     </div>
 
-    <div class="section-title">Catálogo</div>
-    <div id="catalogo" class="grid"></div>
+    <div id="seccionCatalogo">
+      <div class="section-head">
+        <h2>PERFILES ACTIVOS</h2>
+        <span>Toca un paquete para solicitar</span>
+      </div>
+      <div id="catalogo"></div>
+    </div>
 
     <div id="seccionPostulacion" class="modal-box">
       <div class="modal-head">
-        <h3>Postulación de Participantes</h3>
+        <h3>Postulación de Creadoras (+18)</h3>
         <button id="btnCerrarForm" type="button" class="btn-cerrar">Cerrar</button>
       </div>
 
       <form id="formPostulacion">
         <div class="field">
           <label for="alias">Alias artístico *</label>
-          <input id="alias" type="text" required placeholder="Ej. Valentina VIP" />
+          <input id="alias" type="text" required placeholder="Ej. Elena Noir" />
         </div>
 
         <div class="field">
           <label for="pais">País *</label>
-          <input id="pais" type="text" required placeholder="Ej. Venezuela" />
+          <input id="pais" type="text" required placeholder="Ej. Colombia" />
         </div>
 
         <div class="field">
@@ -139,7 +177,7 @@
             <label><input type="checkbox" name="mod" value="Sets Privados" /> Sets Privados</label>
             <label><input type="checkbox" name="mod" value="Videos VIP" /> Videos VIP</label>
             <label><input type="checkbox" name="mod" value="Videollamada" /> Videollamada</label>
-            <label><input type="checkbox" name="mod" value="Contenido Personalizado" /> Personalizado</label>
+            <label><input type="checkbox" name="mod" value="Sin Censura" /> Sin Censura</label>
           </div>
         </div>
 
@@ -151,7 +189,7 @@
           </div>
         </div>
 
-        <button id="btnEnviar" type="submit" class="btn-submit">Enviar Postulación</button>
+        <button id="btnEnviar" type="submit" class="btn-gold">Enviar Postulación</button>
         <div id="estado" class="status"></div>
       </form>
     </div>
@@ -165,8 +203,10 @@
 
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    const btnVerReinas = document.getElementById("btnVerReinas");
     const btnAbrir = document.getElementById("btnAbrirForm");
     const btnCerrar = document.getElementById("btnCerrarForm");
+    const seccionCatalogo = document.getElementById("seccionCatalogo");
     const seccionForm = document.getElementById("seccionPostulacion");
     const catalogo = document.getElementById("catalogo");
     const form = document.getElementById("formPostulacion");
@@ -176,43 +216,57 @@
     const estado = document.getElementById("estado");
     const btnEnviar = document.getElementById("btnEnviar");
 
-    function crearImagenDefecto(titulo, subtitulo) {
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="460" viewBox="0 0 400 460">
+    function crearPortadaBase(codigo, nombre) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="420" viewBox="0 0 600 420">
         <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#1b1b24"/>
-            <stop offset="100%" stop-color="#0b0b0e"/>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1d1a27"/>
+            <stop offset="55%" stop-color="#111116"/>
+            <stop offset="100%" stop-color="#261019"/>
           </linearGradient>
         </defs>
-        <rect width="400" height="460" fill="url(#g)"/>
-        <circle cx="200" cy="175" r="62" fill="#272734" stroke="#e11d48" stroke-width="2"/>
-        <path d="M115 320c0-47 38-80 85-80s85 33 85 80" fill="#272734"/>
-        <text x="200" y="375" text-anchor="middle" fill="#f5f5f7" font-family="system-ui,sans-serif" font-size="20" font-weight="700">${titulo}</text>
-        <text x="200" y="403" text-anchor="middle" fill="#fda4af" font-family="system-ui,sans-serif" font-size="13">${subtitulo}</text>
+        <rect width="600" height="420" fill="url(#bg)"/>
+        <circle cx="300" cy="165" r="72" fill="#272732" stroke="#eab308" stroke-width="2.5"/>
+        <path d="M185 335c0-62 50-105 115-105s115 43 115 105" fill="#272732"/>
+        <text x="300" y="378" text-anchor="middle" fill="#f5f5f7" font-family="system-ui,sans-serif" font-size="22" font-weight="800">${nombre}</text>
+        <text x="300" y="402" text-anchor="middle" fill="#eab308" font-family="system-ui,sans-serif" font-size="13" font-weight="700">${codigo} • QUEEN VAULT</text>
       </svg>`;
       return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
     }
 
-    const PERFILES_DEMO = [
+    const PERFILES_MUESTRA = [
       {
+        codigo: "QV-01",
+        badge: "Disponible ahora",
         alias: "Valeria VIP",
         pais: "Venezuela",
-        estado_perfil: "Muestra",
-        foto_url: crearImagenDefecto("Valeria VIP", "Perfil de muestra")
+        descripcion: "Atención directa, paquetes exclusivos y entregas rápidas bajo reserva.",
+        modalidades: ["Sets Privados", "Videos VIP", "Personalizado"],
+        paquetes: [
+          { nombre: "Pack Acceso (15 Fotos + 3 Videos)", precio: "10$" },
+          { nombre: "Bóveda VIP Mensual", precio: "25$" },
+          { nombre: "Experiencia Personalizada", precio: "40$" }
+        ],
+        foto_url: crearPortadaBase("QV-01", "Valeria VIP")
       },
       {
-        alias: "Camila Gold",
+        codigo: "QV-02",
+        badge: "VIP Exclusiva",
+        alias: "Elena Noir",
         pais: "Colombia",
-        estado_perfil: "Muestra",
-        foto_url: crearImagenDefecto("Camila Gold", "Perfil de muestra")
-      },
-      {
-        alias: "Sofía Velvet",
-        pais: "México",
-        estado_perfil: "Muestra",
-        foto_url: crearImagenDefecto("Sofía Velvet", "Perfil de muestra")
+        descripcion: "Estética nocturna, material sin censura y sesiones privadas bajo reserva.",
+        modalidades: ["Videos VIP", "Videollamada", "Sin Censura"],
+        paquetes: [
+          { nombre: "Pack Nocturno (10 Fotos + 4 Videos)", precio: "15$" },
+          { nombre: "Pase Total 30 Días", precio: "30$" }
+        ],
+        foto_url: crearPortadaBase("QV-02", "Elena Noir")
       }
     ];
+
+    btnVerReinas.addEventListener("click", () => {
+      seccionCatalogo.scrollIntoView({ behavior: "smooth" });
+    });
 
     btnAbrir.addEventListener("click", () => {
       seccionForm.style.display = "block";
@@ -237,16 +291,44 @@
       return (v || "").replace(/[^0-9]/g, "");
     }
 
-    function renderTarjetas(lista) {
-      catalogo.innerHTML = lista.map((c) => {
-        const imgSrc = c.foto_url || crearImagenDefecto(c.alias || "Perfil", c.pais || "Queen Vault");
+    function renderPerfiles(lista) {
+      catalogo.innerHTML = lista.map((p, idx) => {
+        const codigo = p.codigo || `QV-0${idx + 1}`;
+        const alias = p.alias || "Perfil VIP";
+        const pais = p.pais || "";
+        const badge = p.badge || p.estado_perfil || "Disponible";
+        const desc = p.descripcion || "Perfil activo en Queen Vault.";
+        const mods = Array.isArray(p.modalidades) && p.modalidades.length ? p.modalidades : ["VIP"];
+        const paquetes = Array.isArray(p.paquetes) && p.paquetes.length
+          ? p.paquetes
+          : [{ nombre: "Acceso VIP", precio: "15$" }];
+        const imgSrc = p.foto_url || crearPortadaBase(codigo, alias);
+
         return `
           <div class="card">
-            <img src="${imgSrc}" alt="${c.alias || "Perfil"}" />
-            <div class="card-info">
-              <span class="tag">${c.estado_perfil || "Activo"}</span>
-              <strong>${c.alias || "Perfil"}</strong>
-              <span style="color:#9e9ea8;font-size:0.84rem;">${c.pais || ""}</span>
+            <div class="media-box">
+              <img src="${imgSrc}" alt="${alias}" />
+              <span class="badge-top-left">${badge}</span>
+              <span class="badge-top-right">${codigo}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-title">${alias}</div>
+              <div class="card-country">${pais}</div>
+              <div class="card-desc">${desc}</div>
+              <div class="tags">
+                ${mods.map((m) => `<span class="chip">${m}</span>`).join("")}
+              </div>
+              ${paquetes.map((pk) => {
+                const txt = encodeURIComponent(`Hola, quiero solicitar el paquete "${pk.nombre}" (${pk.precio}) de ${alias} (${codigo}) en Queen Vault.`);
+                return `
+                  <a href="https://wa.me/${ADMIN_WA}?text=${txt}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+                    <div class="pack">
+                      <span>${pk.nombre}</span>
+                      <span class="price">${pk.precio}</span>
+                    </div>
+                  </a>
+                `;
+              }).join("")}
             </div>
           </div>
         `;
@@ -256,10 +338,10 @@
     async function cargarCatalogo() {
       const { data, error } = await sb.from("creadoras").select("*").eq("activa", true);
       if (error || !data || data.length === 0) {
-        renderTarjetas(PERFILES_DEMO);
+        renderPerfiles(PERFILES_MUESTRA);
         return;
       }
-      renderTarjetas(data);
+      renderPerfiles(data);
     }
 
     form.addEventListener("submit", async (e) => {
