@@ -24,7 +24,7 @@
     .topbar {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
       padding: 14px 18px; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; margin-bottom: 22px;
+      border-radius: 14px; margin-bottom: 18px;
     }
     .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: 0.6px; }
     .logo span { color: var(--accent); }
@@ -33,6 +33,12 @@
       padding: 10px 16px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
     }
     .btn-postular:hover { background: var(--accent-hover); }
+    .hero {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px; margin-bottom: 22px;
+    }
+    .hero h1 { font-size: 1.35rem; margin-bottom: 6px; }
+    .hero p { color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
     .section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; color: var(--text); }
     .grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -95,6 +101,11 @@
     <div class="topbar">
       <div class="logo">QUEEN <span>VAULT</span></div>
       <button id="btnAbrirForm" type="button" class="btn-postular">Postulación (+18)</button>
+    </div>
+
+    <div class="hero">
+      <h1>Queen Vault</h1>
+      <p>Espacio privado de catálogo y gestión para creadoras (+18). Explora los perfiles destacados o envía tu postulación con tu foto de portada para iniciar revisión.</p>
     </div>
 
     <div class="section-title">Catálogo</div>
@@ -165,6 +176,44 @@
     const estado = document.getElementById("estado");
     const btnEnviar = document.getElementById("btnEnviar");
 
+    function crearImagenDefecto(titulo, subtitulo) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="460" viewBox="0 0 400 460">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1b1b24"/>
+            <stop offset="100%" stop-color="#0b0b0e"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="460" fill="url(#g)"/>
+        <circle cx="200" cy="175" r="62" fill="#272734" stroke="#e11d48" stroke-width="2"/>
+        <path d="M115 320c0-47 38-80 85-80s85 33 85 80" fill="#272734"/>
+        <text x="200" y="375" text-anchor="middle" fill="#f5f5f7" font-family="system-ui,sans-serif" font-size="20" font-weight="700">${titulo}</text>
+        <text x="200" y="403" text-anchor="middle" fill="#fda4af" font-family="system-ui,sans-serif" font-size="13">${subtitulo}</text>
+      </svg>`;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    const PERFILES_DEMO = [
+      {
+        alias: "Valeria VIP",
+        pais: "Venezuela",
+        estado_perfil: "Muestra",
+        foto_url: crearImagenDefecto("Valeria VIP", "Perfil de muestra")
+      },
+      {
+        alias: "Camila Gold",
+        pais: "Colombia",
+        estado_perfil: "Muestra",
+        foto_url: crearImagenDefecto("Camila Gold", "Perfil de muestra")
+      },
+      {
+        alias: "Sofía Velvet",
+        pais: "México",
+        estado_perfil: "Muestra",
+        foto_url: crearImagenDefecto("Sofía Velvet", "Perfil de muestra")
+      }
+    ];
+
     btnAbrir.addEventListener("click", () => {
       seccionForm.style.display = "block";
       seccionForm.scrollIntoView({ behavior: "smooth" });
@@ -185,33 +234,32 @@
     });
 
     function limpiarTel(v) {
-      return (v || "").replace(/\D/g, "");
+      return (v || "").replace(/[^0-9]/g, "");
+    }
+
+    function renderTarjetas(lista) {
+      catalogo.innerHTML = lista.map((c) => {
+        const imgSrc = c.foto_url || crearImagenDefecto(c.alias || "Perfil", c.pais || "Queen Vault");
+        return `
+          <div class="card">
+            <img src="${imgSrc}" alt="${c.alias || "Perfil"}" />
+            <div class="card-info">
+              <span class="tag">${c.estado_perfil || "Activo"}</span>
+              <strong>${c.alias || "Perfil"}</strong>
+              <span style="color:#9e9ea8;font-size:0.84rem;">${c.pais || ""}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     async function cargarCatalogo() {
       const { data, error } = await sb.from("creadoras").select("*").eq("activa", true);
       if (error || !data || data.length === 0) {
-        catalogo.innerHTML = `
-          <div class="card">
-            <div class="card-info">
-              <span class="tag">QUEEN VAULT</span>
-              <strong>Perfiles en preparación</strong>
-              <span style="color:#9e9ea8;font-size:0.84rem;">Toca Postulación (+18) para enviar tu solicitud.</span>
-            </div>
-          </div>
-        `;
+        renderTarjetas(PERFILES_DEMO);
         return;
       }
-      catalogo.innerHTML = data.map((c) => `
-        <div class="card">
-          <img src="${c.foto_url || ""}" alt="${c.alias || "Perfil"}" />
-          <div class="card-info">
-            <span class="tag">${c.estado_perfil || "Activo"}</span>
-            <strong>${c.alias || "Perfil"}</strong>
-            <span style="color:#9e9ea8;font-size:0.84rem;">${c.pais || ""}</span>
-          </div>
-        </div>
-      `).join("");
+      renderTarjetas(data);
     }
 
     form.addEventListener("submit", async (e) => {
