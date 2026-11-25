@@ -298,10 +298,18 @@
         const pais = p.pais || "";
         const badge = p.badge || p.estado_perfil || "Disponible";
         const desc = p.descripcion || "Perfil activo en Queen Vault.";
-        const mods = Array.isArray(p.modalidades) && p.modalidades.length ? p.modalidades : ["VIP"];
+        const mods = Array.isArray(p.modalidades)
+          ? (p.modalidades.length ? p.modalidades : ["VIP"])
+          : (typeof p.modalidades === "string" && p.modalidades.trim()
+              ? p.modalidades.split(",").map((s) => s.trim()).filter(Boolean)
+              : ["VIP"]);
         const paquetes = Array.isArray(p.paquetes) && p.paquetes.length
           ? p.paquetes
-          : [{ nombre: "Acceso VIP", precio: "15$" }];
+          : [
+              { nombre: "Pack Acceso (15 Fotos + 3 Videos)", precio: "10$" },
+              { nombre: "Bóveda VIP Mensual", precio: "25$" },
+              { nombre: "Experiencia Personalizada", precio: "40$" }
+            ];
         const imgSrc = p.foto_url || crearPortadaBase(codigo, alias);
 
         return `
@@ -372,27 +380,17 @@
         const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(ruta);
         const fotoUrl = urlData.publicUrl;
 
-        const resDb = await fetch(`${SUPABASE_URL}/rest/v1/participantes`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "apikey": SUPABASE_KEY,
-            "Authorization": `Bearer ${SUPABASE_KEY}`,
-            "Prefer": "return=minimal"
-          },
-          body: JSON.stringify([{
-            alias_artistico: alias,
-            pais: pais,
-            whatsapp_contacto: waLimpio,
-            modalidades: mods,
-            foto_url: fotoUrl,
-            estado_postulacion: "Pendiente",
-            publicada_en_catalogo: false
-          }])
-        });
-        if (!resDb.ok) {
-          const errTxt = await resDb.text();
-          throw new Error("Error guardando postulación: " + (errTxt || resDb.status));
+        const { error: insErr } = await sb.from("creadoras").insert([{
+          codigo: "QV-PEND",
+          alias: alias,
+          pais: pais,
+          descripcion: `WhatsApp: ${waLimpio} • Postulación pendiente de revisión.`,
+          modalidades: mods.join(", "),
+          foto_url: fotoUrl,
+          activa: false
+        }]);
+        if (insErr) {
+          throw new Error("Error guardando postulación: " + insErr.message);
         }
 
         const msg = encodeURIComponent(
