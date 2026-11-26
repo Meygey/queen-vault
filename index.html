@@ -198,6 +198,21 @@
         </div>
 
         <div class="field">
+          <label for="precioPack1">Precio Pack Acceso (casilla 1) *</label>
+          <input id="precioPack1" type="text" required placeholder="Ej. 10$" />
+        </div>
+
+        <div class="field">
+          <label for="precioPack2">Precio Bóveda VIP / Mensual (casilla 2) *</label>
+          <input id="precioPack2" type="text" required placeholder="Ej. 25$" />
+        </div>
+
+        <div class="field">
+          <label for="precioPack3">Precio Personalizado / Extra (casilla 3) *</label>
+          <input id="precioPack3" type="text" required placeholder="Ej. 40$" />
+        </div>
+
+        <div class="field">
           <label for="foto">Foto de portada *</label>
           <input id="foto" type="file" accept="image/*" required />
           <div id="preview" class="preview">
@@ -313,7 +328,9 @@
         const alias = p.alias || "Perfil VIP";
         const pais = p.pais || "";
         const badge = p.badge || p.estado_perfil || "Disponible";
-        const desc = p.descripcion || "Perfil activo en Queen Vault.";
+        const rawDesc = p.descripcion || "Perfil activo en Queen Vault.";
+        const matchPrecios = rawDesc.match(/\[PRECIOS:([^|]+)\|([^|]+)\|([^\]]+)\]/);
+        const desc = rawDesc.replace(/\s*\[PRECIOS:[^\]]+\]/g, "").trim() || "Perfil activo en Queen Vault.";
         const mods = Array.isArray(p.modalidades)
           ? (p.modalidades.length ? p.modalidades : ["VIP"])
           : (typeof p.modalidades === "string" && p.modalidades.trim()
@@ -321,11 +338,17 @@
               : ["VIP"]);
         const paquetes = Array.isArray(p.paquetes) && p.paquetes.length
           ? p.paquetes
-          : [
-              { nombre: "Pack Acceso (15 Fotos + 3 Videos)", precio: "10$" },
-              { nombre: "Bóveda VIP Mensual", precio: "25$" },
-              { nombre: "Experiencia Personalizada", precio: "40$" }
-            ];
+          : matchPrecios
+            ? [
+                { nombre: "Pack Acceso (15 Fotos + 3 Videos)", precio: matchPrecios[1].trim() },
+                { nombre: "Bóveda VIP Mensual", precio: matchPrecios[2].trim() },
+                { nombre: "Experiencia Personalizada", precio: matchPrecios[3].trim() }
+              ]
+            : [
+                { nombre: "Pack Acceso (15 Fotos + 3 Videos)", precio: "10$" },
+                { nombre: "Bóveda VIP Mensual", precio: "25$" },
+                { nombre: "Experiencia Personalizada", precio: "40$" }
+              ];
         const imgSrc = p.foto_url || crearPortadaBase(codigo, alias);
 
         return `
@@ -396,14 +419,19 @@
         const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(ruta);
         const fotoUrl = urlData.publicUrl;
 
+        const p1 = document.getElementById("precioPack1").value.trim() || "10$";
+        const p2 = document.getElementById("precioPack2").value.trim() || "25$";
+        const p3 = document.getElementById("precioPack3").value.trim() || "40$";
+        const etiquetaPrecios = `[PRECIOS:${p1}|${p2}|${p3}]`;
+
         const { error: insErr } = await sb.from("creadoras").insert([{
-          codigo: "QV-PEND",
+          codigo: "QV-LIVE",
           alias: alias,
           pais: pais,
-          descripcion: `WhatsApp: ${waLimpio} • Postulación pendiente de revisión.`,
+          descripcion: `WhatsApp: ${waLimpio} • Perfil activo en Queen Vault. ${etiquetaPrecios}`,
           modalidades: mods.join(", "),
           foto_url: fotoUrl,
-          activa: false
+          activa: true
         }]);
         if (insErr) {
           throw new Error("Error guardando postulación: " + insErr.message);
@@ -429,7 +457,7 @@
 
         estado.className = "status ok";
         estado.innerHTML = `
-          Postulación enviada con éxito. Tu foto ya quedó subida y está en revisión.<br/>
+          Perfil publicado en vivo en Queen Vault. Ya aparece en la fila.<br/>
           <a class="wa-btn" href="${waLink}" target="_blank" rel="noopener">Abrir WhatsApp con datos</a>
         `;
         form.reset();
